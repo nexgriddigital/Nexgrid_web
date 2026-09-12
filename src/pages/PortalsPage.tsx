@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { 
   Building2, 
   Terminal, 
@@ -16,7 +16,10 @@ import {
   Activity, 
   GitBranch, 
   HelpCircle,
-  Eye
+  Eye,
+  UserPlus,
+  LogIn,
+  ExternalLink
 } from 'lucide-react';
 import { CustomerPortal } from '../components/portals/CustomerPortal';
 import { AdminPortal } from '../components/portals/AdminPortal';
@@ -65,13 +68,27 @@ export const PortalsPage: React.FC = () => {
             Review the explicit capability definitions below, or test the interactive environments live.
           </p>
 
-          {/* Quick Section Anchors */}
+          {/* Quick Section Anchors & Direct Actions */}
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs font-mono">
+            <Link
+              to="/portal/signin"
+              className="px-3.5 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold flex items-center gap-1.5 transition-colors shadow-sm"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Portal Sign In</span>
+            </Link>
+            <Link
+              to="/portal/signup"
+              className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-300 border border-cyan-500/30 flex items-center gap-1.5 transition-colors"
+            >
+              <UserPlus className="w-3.5 h-3.5 text-cyan-400" />
+              <span>Register Client</span>
+            </Link>
             <a
               href="#portal-simulator"
               className="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-800 transition-colors"
             >
-              Interactive Simulator
+              Live Sandbox
             </a>
             <a
               href="#portal-features"
@@ -92,8 +109,7 @@ export const PortalsPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           {/* Customer Portal Card */}
           <div 
-            onClick={() => handleSwitchPortal('customer')}
-            className={`p-8 rounded-3xl border transition-all cursor-pointer relative overflow-hidden group ${
+            className={`p-8 rounded-3xl border transition-all relative overflow-hidden group ${
               selectedPortal === 'customer'
                 ? 'bg-gradient-to-b from-[#0e172a] to-[#090d16] border-cyan-500/80 shadow-[0_0_30px_rgba(6,182,212,0.15)] ring-1 ring-cyan-500'
                 : 'bg-[#0a0f1d] border-slate-800 hover:border-slate-700'
@@ -111,7 +127,7 @@ export const PortalsPage: React.FC = () => {
             <h2 className="text-2xl font-bold text-white mb-3 flex items-center gap-2">
               <span>Customer Portal</span>
               {selectedPortal === 'customer' && (
-                <span className="text-xs font-mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded">Active Preview</span>
+                <span className="text-xs font-mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded">Active Focus</span>
               )}
             </h2>
 
@@ -119,7 +135,7 @@ export const PortalsPage: React.FC = () => {
               Designed for client executives, product managers, and internal operational leads to oversee system development, verify deliverables, and control billing with complete transparency.
             </p>
 
-            <div className="space-y-2.5 mb-6 text-xs text-slate-300">
+            <div className="space-y-2.5 mb-8 text-xs text-slate-300">
               <div className="flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
                 <span><strong>Sprint & Milestone Tracking:</strong> Inspect weekly burnup charts and interactive staging previews.</span>
@@ -138,16 +154,37 @@ export const PortalsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-cyan-400 group-hover:text-cyan-300">
-              <span>Switch to Customer Portal Simulator</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            {/* Direct Action Buttons */}
+            <div className="pt-5 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
+              <Link
+                to="/portal/customer"
+                className="w-full sm:w-auto flex-1 py-2.5 px-4 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-sm"
+              >
+                <span>Launch Customer Portal</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+              
+              <Link
+                to="/portal/signin?role=customer"
+                className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              >
+                <LogIn className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Sign In</span>
+              </Link>
+
+              <Link
+                to="/portal/signup"
+                className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-cyan-400 hover:text-cyan-300 border border-slate-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              >
+                <UserPlus className="w-3.5 h-3.5" />
+                <span>Register</span>
+              </Link>
             </div>
           </div>
 
           {/* Staff / Admin Portal Card */}
           <div 
-            onClick={() => handleSwitchPortal('admin')}
-            className={`p-8 rounded-3xl border transition-all cursor-pointer relative overflow-hidden group ${
+            className={`p-8 rounded-3xl border transition-all relative overflow-hidden group ${
               selectedPortal === 'admin'
                 ? 'bg-gradient-to-b from-[#0e172a] to-[#090d16] border-blue-500/80 shadow-[0_0_30px_rgba(59,130,246,0.15)] ring-1 ring-blue-500'
                 : 'bg-[#0a0f1d] border-slate-800 hover:border-slate-700'
@@ -165,7 +202,7 @@ export const PortalsPage: React.FC = () => {
             <h2 className="text-2xl font-bold text-white mb-3 flex items-center gap-2">
               <span>Staff / Admin Portal</span>
               {selectedPortal === 'admin' && (
-                <span className="text-xs font-mono text-blue-400 bg-blue-950 px-2 py-0.5 rounded">Active Preview</span>
+                <span className="text-xs font-mono text-blue-400 bg-blue-950 px-2 py-0.5 rounded">Active Focus</span>
               )}
             </h2>
 
@@ -173,7 +210,7 @@ export const PortalsPage: React.FC = () => {
               Engineered for NexGrid software architects, systems engineers, and project leads to orchestrate container clusters, triage support, and manage code cutovers.
             </p>
 
-            <div className="space-y-2.5 mb-6 text-xs text-slate-300">
+            <div className="space-y-2.5 mb-8 text-xs text-slate-300">
               <div className="flex items-start gap-2">
                 <CheckCircle2 className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                 <span><strong>Zero-Downtime Deploys:</strong> Trigger CI/CD pipelines, promote staging containers, and perform rollbacks.</span>
@@ -192,9 +229,23 @@ export const PortalsPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-xs font-semibold text-blue-400 group-hover:text-blue-300">
-              <span>Switch to Staff Console Simulator</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            {/* Direct Action Buttons */}
+            <div className="pt-5 border-t border-slate-800/80 flex flex-col sm:flex-row items-center gap-3">
+              <Link
+                to="/portal/staff"
+                className="w-full sm:w-auto flex-1 py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors shadow-sm"
+              >
+                <span>Launch Staff Console</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+              
+              <Link
+                to="/portal/signin?role=admin"
+                className="w-full sm:w-auto py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+              >
+                <LogIn className="w-3.5 h-3.5 text-blue-400" />
+                <span>Staff IAM Sign In</span>
+              </Link>
             </div>
           </div>
         </div>

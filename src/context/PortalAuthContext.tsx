@@ -25,6 +25,8 @@ interface PortalAuthContextType {
   logout: () => void;
   quickDemoLogin: (role: PortalRole) => void;
   switchRole: (role: PortalRole) => void;
+  loginWithPassword: (email: string, role: PortalRole) => Promise<boolean>;
+  registerCustomer: (data: { name: string; email: string; organization: string; title?: string }) => Promise<boolean>;
 }
 
 const STORAGE_KEY = 'nexgrid_portal_auth_user';
@@ -238,9 +240,70 @@ export const PortalAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
   const switchRole = useCallback((newRole: PortalRole) => {
     setActiveRole(newRole);
-    // If the logged-in user is already authenticated for this role, great.
-    // If not, they will need to authenticate for the other role.
   }, []);
+
+  const loginWithPassword = useCallback(async (email: string, role: PortalRole): Promise<boolean> => {
+    const demo = DEMO_USERS[role];
+    const isDemoEmail = email.trim().toLowerCase() === demo.email.toLowerCase();
+
+    const initials = isDemoEmail 
+      ? demo.avatarInitials 
+      : email.substring(0, 2).toUpperCase();
+
+    const user: PortalUser = {
+      id: isDemoEmail ? demo.id : `usr_${role}_${Math.floor(10000 + Math.random() * 90000)}`,
+      name: isDemoEmail ? demo.name : email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+      email: email.trim().toLowerCase(),
+      role: role,
+      organization: isDemoEmail ? demo.organization : (role === 'customer' ? 'Client Organization' : 'NexGrid Systems Engineering'),
+      title: isDemoEmail ? demo.title : (role === 'customer' ? 'Client Lead' : 'Systems Engineer'),
+      avatarInitials: initials,
+      token: `nx_tok_${role}_${Math.random().toString(36).substring(2, 14)}`,
+      clearanceLevel: demo.clearanceLevel,
+      loginTime: 'Just now (Password Auth)',
+      ipAddress: '192.0.2.78 (Verified TLS/SSL)',
+      sessionExpiresAt: Date.now() + (role === 'customer' ? 1000 * 60 * 60 * 8 : 1000 * 60 * 60 * 12),
+    };
+
+    setCurrentUser(user);
+    setActiveRole(role);
+    setOtpState(initialOtpState);
+    return true;
+  }, [initialOtpState]);
+
+  const registerCustomer = useCallback(async (data: { 
+    name: string; 
+    email: string; 
+    organization: string; 
+    title?: string 
+  }): Promise<boolean> => {
+    const initials = data.name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .substring(0, 2)
+      .toUpperCase() || 'CL';
+
+    const user: PortalUser = {
+      id: `usr_cst_${Math.floor(10000 + Math.random() * 90000)}`,
+      name: data.name.trim(),
+      email: data.email.trim().toLowerCase(),
+      role: 'customer',
+      organization: data.organization.trim(),
+      title: data.title?.trim() || 'Client Executive',
+      avatarInitials: initials,
+      token: `nx_tok_cst_${Math.random().toString(36).substring(2, 14)}`,
+      clearanceLevel: 'Tier 2 (Client Onboarding & Project Enclave)',
+      loginTime: 'Just now (Registered Account)',
+      ipAddress: '198.51.100.12 (TLS Session Provisioned)',
+      sessionExpiresAt: Date.now() + 1000 * 60 * 60 * 8,
+    };
+
+    setCurrentUser(user);
+    setActiveRole('customer');
+    setOtpState(initialOtpState);
+    return true;
+  }, [initialOtpState]);
 
   const isAuthenticated = Boolean(currentUser && currentUser.sessionExpiresAt > Date.now());
 
@@ -258,6 +321,8 @@ export const PortalAuthProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         logout,
         quickDemoLogin,
         switchRole,
+        loginWithPassword,
+        registerCustomer,
       }}
     >
       {children}

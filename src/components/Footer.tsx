@@ -156,15 +156,27 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li className="pt-2 border-t border-slate-800/80">
-                <Link to="/portals?view=customer" className="hover:text-cyan-300 transition-colors text-cyan-400 flex items-center gap-1.5 font-mono">
+                <Link to="/portal/signin" className="hover:text-cyan-300 transition-colors text-cyan-400 flex items-center gap-1.5 font-mono">
+                  <span>Portal Sign In</span>
+                  <span className="text-[9px] px-1 py-0.2 bg-cyan-950 border border-cyan-800 rounded">Auth</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/portal/signup" className="hover:text-cyan-300 transition-colors text-slate-300 flex items-center gap-1.5 font-mono">
+                  <span>Register Client Org</span>
+                  <span className="text-[9px] px-1 py-0.2 bg-slate-800 rounded">New</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/portal/customer" className="hover:text-cyan-300 transition-colors text-slate-400 flex items-center gap-1.5 font-mono">
                   <span>Customer Portal</span>
                   <span className="text-[9px] px-1 py-0.2 bg-cyan-950 border border-cyan-800 rounded">Client</span>
                 </Link>
               </li>
               <li>
-                <Link to="/portals?view=admin" className="hover:text-blue-300 transition-colors text-blue-400 flex items-center gap-1.5 font-mono">
-                  <span>Staff / Admin Console</span>
-                  <span className="text-[9px] px-1 py-0.2 bg-blue-950 border border-blue-800 rounded">Admin</span>
+                <Link to="/portal/staff" className="hover:text-blue-300 transition-colors text-slate-400 flex items-center gap-1.5 font-mono">
+                  <span>Staff Console</span>
+                  <span className="text-[9px] px-1 py-0.2 bg-blue-950 border border-blue-800 rounded">Staff</span>
                 </Link>
               </li>
             </ul>

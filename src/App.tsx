@@ -19,6 +19,10 @@ import { WhyUsPage } from './pages/WhyUsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { PortalsPage } from './pages/PortalsPage';
+import { PortalSignInPage } from './pages/PortalSignInPage';
+import { PortalSignUpPage } from './pages/PortalSignUpPage';
+import { CustomerPortalPage } from './pages/CustomerPortalPage';
+import { StaffPortalPage } from './pages/StaffPortalPage';
 
 export default function App() {
   return (
@@ -42,8 +46,19 @@ export default function App() {
                 <Route path="/process" element={<WhyUsPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                
+                {/* Dedicated Portal Ecosystem Routes */}
                 <Route path="/portals" element={<PortalsPage />} />
                 <Route path="/portal" element={<PortalsPage />} />
+                <Route path="/portal/signin" element={<PortalSignInPage />} />
+                <Route path="/portal/login" element={<PortalSignInPage />} />
+                <Route path="/portal/signup" element={<PortalSignUpPage />} />
+                <Route path="/portal/register" element={<PortalSignUpPage />} />
+                <Route path="/portal/customer" element={<CustomerPortalPage />} />
+                <Route path="/portal/client" element={<CustomerPortalPage />} />
+                <Route path="/portal/staff" element={<StaffPortalPage />} />
+                <Route path="/portal/admin" element={<StaffPortalPage />} />
+
                 {/* Fallback route */}
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

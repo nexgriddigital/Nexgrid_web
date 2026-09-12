@@ -88,13 +88,13 @@ export const Navbar: React.FC = () => {
           {/* Right Action CTA */}
           <div className="hidden sm:flex items-center gap-2.5">
             <Link
-              to="/portals"
+              to={currentUser ? (currentUser.role === 'customer' ? '/portal/customer' : '/portal/staff') : '/portal/signin'}
               className={`px-3 py-1.5 rounded-lg border text-xs font-mono flex items-center gap-1.5 transition-colors ${
                 currentUser
-                  ? 'bg-cyan-950/80 border-cyan-500/50 text-cyan-300 hover:bg-cyan-900/80'
+                  ? 'bg-cyan-950/80 border-cyan-500/50 text-cyan-300 hover:bg-cyan-900/80 shadow-[0_0_15px_rgba(6,182,212,0.15)]'
                   : 'bg-slate-900/90 hover:bg-slate-800 border-slate-700/80 text-cyan-300 hover:text-cyan-200'
               }`}
-              title={currentUser ? `Authenticated as ${currentUser.name} (${currentUser.role})` : 'Access Customer & Staff Portals'}
+              title={currentUser ? `Go to ${currentUser.role === 'customer' ? 'Customer Portal' : 'Staff Console'} (${currentUser.name})` : 'Sign In to Customer & Staff Portals'}
             >
               {currentUser ? (
                 <>
@@ -105,7 +105,7 @@ export const Navbar: React.FC = () => {
               ) : (
                 <>
                   <Lock className="w-3 h-3 text-cyan-400" />
-                  <span>Portals</span>
+                  <span>Portal Sign In</span>
                 </>
               )}
             </Link>
