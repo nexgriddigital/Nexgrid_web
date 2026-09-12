@@ -97,7 +97,7 @@ export const MOCK_CLIENT_PROJECT: ClientProject = {
   nextMilestoneDate: 'Oct 04, 2026',
   stagingUrl: 'https://staging.apex-logistics.nexgrid.cloud',
   productionUrl: 'https://portal.apexlogistics.io',
-  leadArchitect: 'Alex Vance (Senior Systems Architect)',
+  leadArchitect: 'Amanueal Hailu (Owner & Lead Architect)',
   milestones: [
     {
       id: 'm1',
@@ -203,7 +203,7 @@ export const MOCK_TICKETS: PortalTicket[] = [
     status: 'In Progress',
     createdAt: '2 hours ago',
     author: 'Sarah Jenkins (Client)',
-    assignedEngineer: 'Alex Vance (Lead Architect)',
+    assignedEngineer: 'Amanueal Hailu (Owner & Super Admin)',
     messagesCount: 3
   },
   {
@@ -290,7 +290,7 @@ export const MOCK_SECURITY_AUDIT_LOGS = [
     id: 'sec-02',
     event: 'Repository Access Token Generated',
     target: 'github.com/nexgrid/apex-logistics-os',
-    sourceIp: 'Staff: Alex Vance',
+    sourceIp: 'Staff: Amanueal Hailu (Owner & Super Admin)',
     time: '14 mins ago',
     status: 'SUCCESS'
   },

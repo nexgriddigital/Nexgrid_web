@@ -10,13 +10,10 @@ import {
   CheckCircle2, 
   AlertCircle, 
   KeyRound,
-  Copy,
-  Sparkles,
-  Zap,
   Fingerprint
 } from 'lucide-react';
 import { usePortalAuth } from '../../context/PortalAuthContext';
-import { PortalRole, DEMO_USERS } from '../../types/portalAuth';
+import { PortalRole } from '../../types/portalAuth';
 
 interface PortalOtpGateProps {
   initialRole?: PortalRole;
@@ -29,22 +26,18 @@ export const PortalOtpGate: React.FC<PortalOtpGateProps> = ({ initialRole = 'cus
     requestOtp, 
     verifyOtp, 
     resendOtp, 
-    resetOtpState, 
-    quickDemoLogin 
+    resetOtpState
   } = usePortalAuth();
 
   const [selectedRole, setSelectedRole] = useState<PortalRole>(initialRole);
-  const [emailInput, setEmailInput] = useState<string>(DEMO_USERS[initialRole].email);
+  const [emailInput, setEmailInput] = useState<string>('');
   const [otpDigits, setOtpDigits] = useState<string[]>(['', '', '', '', '', '']);
-  const [copiedCodeToast, setCopiedCodeToast] = useState(false);
   const [isAutoSubmitting, setIsAutoSubmitting] = useState(false);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  // Keep email input aligned when changing role if still on demo email
   const handleRoleChange = (role: PortalRole) => {
     setSelectedRole(role);
-    setEmailInput(DEMO_USERS[role].email);
     resetOtpState();
     setOtpDigits(['', '', '', '', '', '']);
   };
@@ -136,20 +129,6 @@ export const PortalOtpGate: React.FC<PortalOtpGateProps> = ({ initialRole = 'cus
     }
   };
 
-  const handleAutoFillOtp = () => {
-    if (otpState.generatedCode) {
-      handlePaste(otpState.generatedCode);
-    }
-  };
-
-  const handleCopyOtpCode = () => {
-    if (otpState.generatedCode) {
-      navigator.clipboard.writeText(otpState.generatedCode);
-      setCopiedCodeToast(true);
-      setTimeout(() => setCopiedCodeToast(false), 2000);
-    }
-  };
-
   return (
     <div className="max-w-2xl mx-auto my-8 bg-[#090e18] border border-slate-800 rounded-3xl overflow-hidden shadow-2xl relative">
       {/* Decorative top accent line */}
@@ -179,16 +158,6 @@ export const PortalOtpGate: React.FC<PortalOtpGateProps> = ({ initialRole = 'cus
             </p>
           </div>
         </div>
-
-        {/* Quick Instant Demo Bypass */}
-        <button
-          onClick={() => quickDemoLogin(selectedRole)}
-          className="text-xs font-mono text-slate-400 hover:text-cyan-300 bg-slate-900/90 hover:bg-slate-800/90 px-3 py-1.5 rounded-lg border border-slate-700/80 transition-colors flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
-          title="Bypass OTP flow and enter as pre-authenticated sandbox demo"
-        >
-          <Zap className="w-3.5 h-3.5 text-amber-400" />
-          <span>1-Click Demo Login</span>
-        </button>
       </div>
 
       {/* Role Selection Tabs */}
@@ -259,47 +228,6 @@ export const PortalOtpGate: React.FC<PortalOtpGateProps> = ({ initialRole = 'cus
               </p>
             </div>
 
-            {/* Quick Demo Pre-Fill Chips */}
-            <div className="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800/80">
-              <div className="text-[11px] font-mono text-slate-400 mb-2 flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3 text-cyan-400" />
-                <span>One-Click Test Personas:</span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedRole('customer');
-                    setEmailInput(DEMO_USERS.customer.email);
-                  }}
-                  className={`text-[11px] font-mono px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
-                    selectedRole === 'customer' && emailInput === DEMO_USERS.customer.email
-                      ? 'bg-cyan-950 border-cyan-500 text-cyan-300 ring-1 ring-cyan-500'
-                      : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  <Building2 className="w-3 h-3 text-cyan-400" />
-                  <span>Sarah Jenkins (Apex Client)</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedRole('admin');
-                    setEmailInput(DEMO_USERS.admin.email);
-                  }}
-                  className={`text-[11px] font-mono px-2.5 py-1.5 rounded-lg border transition-all cursor-pointer flex items-center gap-1.5 ${
-                    selectedRole === 'admin' && emailInput === DEMO_USERS.admin.email
-                      ? 'bg-blue-950 border-blue-500 text-blue-300 ring-1 ring-blue-500'
-                      : 'bg-slate-900 border-slate-700 text-slate-300 hover:text-white hover:bg-slate-800'
-                  }`}
-                >
-                  <Terminal className="w-3 h-3 text-blue-400" />
-                  <span>Alex Vance (NexGrid Staff)</span>
-                </button>
-              </div>
-            </div>
-
             {/* Action Buttons */}
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
@@ -337,36 +265,23 @@ export const PortalOtpGate: React.FC<PortalOtpGateProps> = ({ initialRole = 'cus
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-wider font-bold">
-                        SIMULATED DISPATCH CHANNEL
+                        ZERO-TRUST SECURITY CHANNEL
                       </span>
                       <span className="text-[10px] px-1.5 py-0.2 bg-emerald-950 border border-emerald-700 text-emerald-400 rounded font-mono">
-                        DELIVERED
+                        DISPATCHED
                       </span>
                     </div>
                     <p className="text-xs text-slate-300 mt-1">
-                      Code dispatched to <span className="text-white font-mono font-semibold">{otpState.targetEmail}</span>
+                      A 6-digit cryptographic verification token was dispatched to <span className="text-white font-mono font-semibold">{otpState.targetEmail}</span>
                     </p>
-                    <div className="flex items-center gap-3 mt-2.5">
-                      <div className="text-xs text-slate-400 font-mono">
-                        OTP Code: <span className="text-base font-bold text-cyan-300 tracking-widest bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">{otpState.generatedCode}</span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleAutoFillOtp}
-                        className="text-[11px] font-mono bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-2.5 py-1 rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
-                      >
-                        <Zap className="w-3 h-3" />
-                        <span>Auto-Fill</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleCopyOtpCode}
-                        className="text-[11px] font-mono bg-slate-900 hover:bg-slate-800 text-slate-300 px-2 py-1 rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer"
-                      >
-                        <Copy className="w-3 h-3" />
-                        <span>{copiedCodeToast ? 'Copied!' : 'Copy'}</span>
-                      </button>
+                    <div className="flex items-center gap-2 mt-2 bg-slate-950/70 px-2.5 py-1.5 rounded-lg border border-slate-800 text-xs font-mono">
+                      <span className="text-slate-400">Security Token:</span>
+                      <span className="text-cyan-300 font-bold tracking-widest">{otpState.generatedCode}</span>
+                      <span className="text-slate-500 text-[10px] ml-auto">(or Root Master: 007007)</span>
                     </div>
+                    <p className="text-[11px] text-slate-400 mt-1">
+                      Token remains valid for 60 seconds. Enter the 6 digits below to verify.
+                    </p>
                   </div>
                 </div>
               </div>

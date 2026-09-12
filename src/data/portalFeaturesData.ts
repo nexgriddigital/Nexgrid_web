@@ -214,7 +214,7 @@ export const PORTAL_FEATURES: PortalFeatureDetail[] = [
       },
       {
         title: 'Direct Senior Lead Architect Channel',
-        description: 'Discuss technical details directly with assigned systems engineers like Alex Vance, avoiding outsourced call centers.'
+        description: 'Discuss technical details directly with assigned systems engineers like Amanueal Hailu (Owner & Lead Architect), avoiding outsourced call centers.'
       },
       {
         title: 'Transparent Resolution History',
@@ -258,7 +258,7 @@ export const PORTAL_FEATURES: PortalFeatureDetail[] = [
             priority: 'Normal (24h SLA)',
             slaRemaining: '18h 42m',
             status: 'In Progress',
-            assignedTo: 'Alex Vance (Lead Architect)',
+            assignedTo: 'Amanueal Hailu (Owner & Super Admin)',
             lastMessage: 'Schema draft completed. Integrating into CSV export stream.'
           },
           {
@@ -410,7 +410,7 @@ export const PORTAL_FEATURES: PortalFeatureDetail[] = [
         repoName: 'github.com/nexgrid/apex-logistics-os',
         branch: 'release/v2.4.0',
         latestCommit: 'f892a1c — Merge PR #42: Real-time route telemetry stream',
-        author: 'Alex Vance (Lead Architect)',
+        author: 'Amanueal Hailu (Owner & Lead Architect)',
         status: 'Passing (All 142 Unit & E2E tests green)'
       }
     }

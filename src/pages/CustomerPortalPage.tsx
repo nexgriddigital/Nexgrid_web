@@ -8,14 +8,13 @@ import {
   ArrowRight, 
   ArrowLeft,
   Terminal,
-  Zap,
   UserCheck
 } from 'lucide-react';
 import { CustomerPortal } from '../components/portals/CustomerPortal';
 import { usePortalAuth } from '../context/PortalAuthContext';
 
 export const CustomerPortalPage: React.FC = () => {
-  const { currentUser, isAuthenticated, logout, quickDemoLogin } = usePortalAuth();
+  const { currentUser, isAuthenticated, logout } = usePortalAuth();
   const navigate = useNavigate();
 
   const isCustomerAuthed = isAuthenticated && currentUser?.role === 'customer';
@@ -127,20 +126,6 @@ export const CustomerPortalPage: React.FC = () => {
               >
                 <span>Register New Client Account</span>
               </Link>
-            </div>
-
-            {/* Quick Demo Access */}
-            <div className="pt-6 border-t border-slate-800/80">
-              <span className="text-xs font-mono text-slate-400 block mb-3">
-                FOR EVALUATION & REVIEW:
-              </span>
-              <button
-                onClick={() => quickDemoLogin('customer')}
-                className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 text-cyan-300 text-xs font-mono inline-flex items-center gap-2 transition-colors cursor-pointer"
-              >
-                <Zap className="w-3.5 h-3.5 text-cyan-400" />
-                <span>One-Click Client Demo Login (Sarah Chen — Apex Logistics)</span>
-              </button>
             </div>
           </div>
         )}

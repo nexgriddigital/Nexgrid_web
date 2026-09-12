@@ -10,14 +10,12 @@ import {
   ShieldCheck, 
   CheckCircle2, 
   AlertCircle,
-  Sparkles,
-  Zap,
   ArrowLeft,
   Eye,
   EyeOff
 } from 'lucide-react';
 import { usePortalAuth } from '../context/PortalAuthContext';
-import { PortalRole, DEMO_USERS } from '../types/portalAuth';
+import { PortalRole } from '../types/portalAuth';
 import { NexGridLogo } from '../components/NexGridLogo';
 
 export const PortalSignInPage: React.FC = () => {
@@ -30,7 +28,6 @@ export const PortalSignInPage: React.FC = () => {
     verifyOtp, 
     resendOtp, 
     otpState, 
-    quickDemoLogin,
     loginWithPassword,
     resetOtpState
   } = usePortalAuth();
@@ -41,8 +38,8 @@ export const PortalSignInPage: React.FC = () => {
   );
 
   const [authMethod, setAuthMethod] = useState<'otp' | 'password'>('password');
-  const [emailInput, setEmailInput] = useState(DEMO_USERS[selectedRole].email);
-  const [passwordInput, setPasswordInput] = useState('ApexSecure2026!');
+  const [emailInput, setEmailInput] = useState('');
+  const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [otpDigits, setOtpDigits] = useState(['', '', '', '', '', '']);
@@ -63,8 +60,6 @@ export const PortalSignInPage: React.FC = () => {
     const roleParam = searchParams.get('role');
     if (roleParam === 'admin' || roleParam === 'customer') {
       setSelectedRole(roleParam);
-      setEmailInput(DEMO_USERS[roleParam].email);
-      setPasswordInput(roleParam === 'admin' ? 'StaffRoot2026!' : 'ApexSecure2026!');
       resetOtpState();
       setErrorMessage(null);
     }
@@ -73,8 +68,6 @@ export const PortalSignInPage: React.FC = () => {
   const handleRoleChange = (role: PortalRole) => {
     setSelectedRole(role);
     setSearchParams({ role });
-    setEmailInput(DEMO_USERS[role].email);
-    setPasswordInput(role === 'admin' ? 'StaffRoot2026!' : 'ApexSecure2026!');
     resetOtpState();
     setErrorMessage(null);
   };
@@ -163,16 +156,6 @@ export const PortalSignInPage: React.FC = () => {
       } else {
         navigate('/portal/staff');
       }
-    }
-  };
-
-  // Quick Demo Access Handler
-  const handleQuickDemo = (role: PortalRole) => {
-    quickDemoLogin(role);
-    if (role === 'customer') {
-      navigate('/portal/customer');
-    } else {
-      navigate('/portal/staff');
     }
   };
 
@@ -320,7 +303,7 @@ export const PortalSignInPage: React.FC = () => {
                     required
                     value={emailInput}
                     onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="name@company.com"
+                    placeholder={selectedRole === 'admin' ? "amanuealhailu007@gmail.com" : "name@company.com"}
                     className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
                   />
                 </div>
@@ -404,7 +387,7 @@ export const PortalSignInPage: React.FC = () => {
                         required
                         value={emailInput}
                         onChange={(e) => setEmailInput(e.target.value)}
-                        placeholder="authorized.user@company.com"
+                        placeholder={selectedRole === 'admin' ? "amanuealhailu007@gmail.com" : "authorized.user@company.com"}
                         className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-colors"
                       />
                     </div>
@@ -430,11 +413,21 @@ export const PortalSignInPage: React.FC = () => {
                 </form>
               ) : (
                 <div className="space-y-4">
-                  <div className="p-3 rounded-xl bg-cyan-950/40 border border-cyan-800/40 text-xs">
-                    <div className="text-cyan-300 font-semibold mb-0.5">Code sent to:</div>
-                    <div className="font-mono text-white text-[11px] truncate">{otpState.targetEmail}</div>
-                    <div className="text-[11px] text-slate-400 mt-1">
-                      (Demo Code: <strong className="text-cyan-400 font-mono tracking-widest">{otpState.generatedCode}</strong>)
+                  <div className="p-3.5 rounded-xl bg-cyan-950/40 border border-cyan-800/40 text-xs">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-cyan-300 font-semibold">Verification token dispatched:</span>
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 bg-emerald-950 border border-emerald-700 text-emerald-400 rounded">
+                        DISPATCHED
+                      </span>
+                    </div>
+                    <div className="font-mono text-white text-[11px] truncate mb-2">{otpState.targetEmail}</div>
+                    <div className="flex items-center justify-between bg-slate-950/70 p-2 rounded-lg border border-slate-800 mb-2">
+                      <span className="text-[11px] text-slate-400 font-mono">Dispatched Token:</span>
+                      <span className="font-mono font-bold text-cyan-300 tracking-wider text-xs">{otpState.generatedCode}</span>
+                    </div>
+                    <div className="text-[11px] text-slate-400 flex items-center gap-1.5">
+                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <span>Valid for 60s (Root Master Key: 007007 also active).</span>
                     </div>
                   </div>
 
@@ -483,44 +476,10 @@ export const PortalSignInPage: React.FC = () => {
                     <span>Verify & Enter Portal</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const code = otpState.generatedCode;
-                      setOtpDigits(code.split(''));
-                      handleVerifyOtp(code);
-                    }}
-                    className="w-full py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-mono text-cyan-300 border border-slate-800 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Auto-Fill Demo Code ({otpState.generatedCode})</span>
-                  </button>
                 </div>
               )}
             </div>
           )}
-
-          {/* Quick Demo Credentials Shortcut */}
-          <div className="mt-6 pt-5 border-t border-slate-800/80">
-            <div className="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-2.5 text-center">
-              INSTANT PREVIEW & EVALUATION
-            </div>
-            
-            <button
-              type="button"
-              onClick={() => handleQuickDemo(selectedRole)}
-              className="w-full py-2.5 px-3 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-cyan-500/30 text-cyan-300 text-xs font-mono flex items-center justify-between transition-colors group cursor-pointer"
-            >
-              <div className="flex items-center gap-2">
-                <Zap className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-                <span>1-Click Instant Demo Login:</span>
-              </div>
-              <strong className="text-white">
-                {selectedRole === 'customer' ? 'Sarah (Client Lead)' : 'Alex (Staff Admin)'}
-              </strong>
-            </button>
-          </div>
 
           {/* Bottom Link: Sign Up */}
           <div className="mt-6 text-center text-xs text-slate-400">

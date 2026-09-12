@@ -15,6 +15,21 @@ export interface PortalUser {
   sessionExpiresAt: number;
 }
 
+export const SUPERADMIN_PROFILE: PortalUser = {
+  id: 'usr_root_007_amanueal_hailu',
+  name: 'Amanueal Hailu',
+  email: 'amanuealhailu007@gmail.com',
+  role: 'admin',
+  organization: 'NexGrid Digital Systems & Core Infrastructure',
+  title: 'Owner & Super Admin',
+  avatarInitials: 'AH',
+  token: 'nx_tok_root_007_amanueal_hailu',
+  clearanceLevel: 'Tier 4 (Root Owner & Enterprise Superadmin)',
+  loginTime: 'Active Session (Root Owner)',
+  ipAddress: '10.240.0.1 (Zero-Trust Root IAM Enclave)',
+  sessionExpiresAt: Date.now() + 1000 * 60 * 60 * 24 * 7, // 7 days
+};
+
 export const DEMO_USERS: Record<PortalRole, PortalUser> = {
   customer: {
     id: 'usr_client_94821',
@@ -30,18 +45,5 @@ export const DEMO_USERS: Record<PortalRole, PortalUser> = {
     ipAddress: '192.0.2.44 (Client TLS/SSL)',
     sessionExpiresAt: Date.now() + 1000 * 60 * 60 * 8, // 8 hours
   },
-  admin: {
-    id: 'usr_adm_10382',
-    name: 'Alex Vance',
-    email: 'alex.vance@nexgrid.tech',
-    role: 'admin',
-    organization: 'NexGrid Systems Engineering',
-    title: 'Principal Systems Architect & Superadmin',
-    avatarInitials: 'AV',
-    token: 'nx_tok_adm_77a1c4e902b8',
-    clearanceLevel: 'Tier 4 (Zero-Trust Root Infrastructure)',
-    loginTime: 'Just now',
-    ipAddress: '10.240.12.8 (mTLS VPC Mesh)',
-    sessionExpiresAt: Date.now() + 1000 * 60 * 60 * 12, // 12 hours
-  }
+  admin: SUPERADMIN_PROFILE
 };

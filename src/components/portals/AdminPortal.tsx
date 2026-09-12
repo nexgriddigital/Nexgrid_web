@@ -31,10 +31,10 @@ import { usePortalAuth } from '../../context/PortalAuthContext';
 
 export const AdminPortal: React.FC = () => {
   const { currentUser, logout } = usePortalAuth();
-  const displayName = currentUser?.name || 'Alex Vance';
-  const displayEmail = currentUser?.email || 'alex.vance@nexgrid.tech';
-  const displayTitle = currentUser?.title || 'Lead Architect & Superadmin';
-  const displayToken = currentUser?.token || 'ng_tok_adm_77a1c4e902b8';
+  const displayName = currentUser?.name || 'Amanueal Hailu';
+  const displayEmail = currentUser?.email || 'amanuealhailu007@gmail.com';
+  const displayTitle = currentUser?.title || 'Owner & Super Admin';
+  const displayToken = currentUser?.token || 'nx_tok_root_007_amanueal_hailu';
 
   const [activeTab, setActiveTab] = useState<'telemetry' | 'projects' | 'tickets' | 'security'>('telemetry');
   const [telemetry, setTelemetry] = useState(MOCK_ADMIN_TELEMETRY);

@@ -150,7 +150,7 @@ export const CustomerPortal: React.FC = () => {
       status: 'Open',
       createdAt: 'Just now',
       author: 'Sarah Jenkins (Client)',
-      assignedEngineer: 'Alex Vance (Lead Architect)',
+      assignedEngineer: 'Amanueal Hailu (Owner & Lead Architect)',
       messagesCount: 1
     };
 
@@ -232,7 +232,7 @@ export const CustomerPortal: React.FC = () => {
 
           <div className="px-3 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 flex items-center gap-2">
             <span className="text-slate-500">Lead Architect:</span>
-            <span className="text-white font-medium">Alex Vance</span>
+            <span className="text-white font-medium">Amanueal Hailu</span>
           </div>
 
           <button
