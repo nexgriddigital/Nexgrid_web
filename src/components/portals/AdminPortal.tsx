@@ -1,24 +1,23 @@
 import React, { useState } from 'react';
 import { 
   ShieldCheck, 
-  Cpu, 
-  Database, 
-  Terminal, 
-  Server, 
-  Activity, 
-  GitPullRequest, 
-  Users, 
   Layers, 
+  Activity, 
+  HelpCircle, 
+  Clock, 
   CheckCircle2, 
-  AlertTriangle, 
   Play, 
   RefreshCw, 
-  ArrowUpRight,
-  Filter,
+  ExternalLink,
   Lock,
   Zap,
   Globe,
-  LogOut
+  LogOut,
+  FolderGit2,
+  Server,
+  UserCheck,
+  Calendar,
+  AlertCircle
 } from 'lucide-react';
 import { 
   MOCK_ADMIN_TELEMETRY, 
@@ -34,29 +33,35 @@ export const AdminPortal: React.FC = () => {
   const displayName = currentUser?.name || 'Amanueal Hailu';
   const displayEmail = currentUser?.email || 'amanuealhailu007@gmail.com';
   const displayTitle = currentUser?.title || 'Owner & Super Admin';
-  const displayToken = currentUser?.token || 'nx_tok_root_007_amanueal_hailu';
 
-  const [activeTab, setActiveTab] = useState<'telemetry' | 'projects' | 'tickets' | 'security'>('telemetry');
+  // Default to 'projects' as requested and shown in user's screenshot
+  const [activeTab, setActiveTab] = useState<'projects' | 'telemetry' | 'tickets' | 'security'>('projects');
   const [telemetry, setTelemetry] = useState(MOCK_ADMIN_TELEMETRY);
   const [projects, setProjects] = useState(MOCK_ALL_PROJECTS);
   const [tickets, setTickets] = useState<PortalTicket[]>(MOCK_TICKETS);
-  const [isDeploying, setIsDeploying] = useState(false);
+  const [isDeploying, setIsDeploying] = useState<string | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [adminToast, setAdminToast] = useState<string | null>(null);
 
   const handleSimulateDeploy = (projectName: string) => {
-    setIsDeploying(true);
-    setAdminToast(`Initiating zero-downtime CI/CD container build for ${projectName}...`);
+    setIsDeploying(projectName);
+    setAdminToast(`Publishing latest updates for ${projectName}...`);
 
     setTimeout(() => {
-      setIsDeploying(false);
-      setAdminToast(`Success: ${projectName} container promoted to latest staging release.`);
-      setTimeout(() => setAdminToast(null), 4000);
-    }, 2000);
+      setIsDeploying(null);
+      setAdminToast(`✓ Success: ${projectName} has been updated and is live!`);
+      setTimeout(() => setAdminToast(null), 4500);
+    }, 1500);
   };
 
-  const handlePurgeCache = () => {
-    setAdminToast('Edge Cloudflare CDN cache purged globally (24 PoPs cleared in 420ms).');
-    setTimeout(() => setAdminToast(null), 4000);
+  const handleRefreshStatus = () => {
+    setIsRefreshing(true);
+    setAdminToast('Checking all systems and updating live status...');
+    setTimeout(() => {
+      setIsRefreshing(false);
+      setAdminToast('✓ All 14 cloud systems checked: 100% operational and healthy.');
+      setTimeout(() => setAdminToast(null), 3500);
+    }, 800);
   };
 
   const handleToggleTicketStatus = (ticketId: string) => {
@@ -67,77 +72,100 @@ export const AdminPortal: React.FC = () => {
       }
       return t;
     }));
-    setAdminToast(`Ticket ${ticketId} status updated.`);
+    setAdminToast(`Support ticket ${ticketId} updated successfully.`);
     setTimeout(() => setAdminToast(null), 3000);
+  };
+
+  // Plain-English project summaries
+  const projectDescriptions: Record<string, { purpose: string; phase: string }> = {
+    'PRJ-APEX': {
+      purpose: 'Fleet management, driver dispatching, and real-time GPS tracking for delivery trucks.',
+      phase: 'Testing & Client Review (Delivery in 22 days)'
+    },
+    'PRJ-LUMINA': {
+      purpose: 'High-speed online storefront with instant checkout and inventory tracking.',
+      phase: 'Live in Production (Selling globally)'
+    },
+    'PRJ-STRATA': {
+      purpose: 'Secure financial vault and private investor portal with two-factor login.',
+      phase: 'In Active Development (Sprint 3 of 4)'
+    }
   };
 
   return (
     <div className="bg-[#070b12] border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
-      {/* Toast Bar */}
+      {/* Friendly Notification Toast */}
       {adminToast && (
-        <div className="bg-cyan-950 border-b border-cyan-800/80 px-4 py-2.5 text-xs text-cyan-300 flex items-center justify-between animate-in fade-in">
+        <div className="bg-cyan-950/90 border-b border-cyan-800/80 px-5 py-3 text-xs text-cyan-200 flex items-center justify-between animate-in fade-in">
           <span className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-cyan-400" />
-            <span>{adminToast}</span>
+            <Zap className="w-4 h-4 text-cyan-400 shrink-0" />
+            <span className="font-medium">{adminToast}</span>
           </span>
-          <button onClick={() => setAdminToast(null)} className="text-cyan-400 hover:text-white text-xs">Dismiss</button>
+          <button 
+            onClick={() => setAdminToast(null)} 
+            className="text-cyan-400 hover:text-white text-xs px-2 py-0.5 rounded cursor-pointer font-medium"
+          >
+            Dismiss
+          </button>
         </div>
       )}
 
-      {/* Staff Header */}
+      {/* Clear, Professional Header */}
       <div className="p-6 sm:p-8 bg-[#0a101d] border-b border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-start sm:items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600/30 to-indigo-600/30 border border-blue-500/50 flex items-center justify-center shrink-0">
-            <Terminal className="w-6 h-6 text-blue-400" />
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-600/30 to-blue-600/30 border border-cyan-500/40 flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-6 h-6 text-cyan-400" />
           </div>
 
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono uppercase tracking-wider text-blue-400 bg-blue-950/80 px-2 py-0.5 rounded border border-blue-800/40">
-                STAFF / ADMIN CONSOLE
+            <div className="flex flex-wrap items-center gap-2 mb-1">
+              <span className="text-xs font-semibold uppercase tracking-wider text-cyan-400 bg-cyan-950/80 px-2.5 py-0.5 rounded-full border border-cyan-800/40">
+                Owner & Administrator
               </span>
-              <span className="text-xs font-mono text-emerald-400 flex items-center gap-1">
+              <span className="text-xs text-emerald-400 flex items-center gap-1 font-medium bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-800/40">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                SUPERUSER PERMISSIONS
+                Full Management Access
               </span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-white">
-              NexGrid Systems Engineering Cockpit
+              NexGrid Business & Operations Dashboard
             </h2>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-400 mt-1">
               <span>
-                Authenticated: <strong className="text-slate-200">{displayName}</strong> ({displayTitle})
+                Signed in as: <strong className="text-white">{displayName}</strong> ({displayTitle})
               </span>
               <span>•</span>
-              <span className="text-blue-300 font-mono">{displayEmail}</span>
+              <span className="text-cyan-300 font-mono">{displayEmail}</span>
               <span>•</span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800/60">
-                <Lock className="w-3 h-3" />
-                <span>OTP Verified: {displayToken.slice(0, 12)}...</span>
+              <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/50">
+                <CheckCircle2 className="w-3 h-3" />
+                <span>Secure Session Active</span>
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
           <button
-            onClick={handlePurgeCache}
-            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-mono flex items-center gap-2 transition-colors cursor-pointer"
+            onClick={handleRefreshStatus}
+            disabled={isRefreshing}
+            className="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700 text-xs font-medium flex items-center gap-2 transition-colors cursor-pointer"
+            title="Refresh current system and project status"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Purge Edge Cache</span>
+            <RefreshCw className={`w-3.5 h-3.5 text-cyan-400 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <span>{isRefreshing ? 'Refreshing...' : 'Refresh Status'}</span>
           </button>
 
-          <div className="px-3 py-2 rounded-xl bg-emerald-950/60 border border-emerald-800/60 text-xs font-mono text-emerald-400 flex items-center gap-2">
+          <div className="px-3.5 py-2 rounded-xl bg-emerald-950/50 border border-emerald-800/60 text-xs font-medium text-emerald-300 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>All 14 Clusters Healthy</span>
+            <span>All 14 Systems Online</span>
           </div>
 
           <button
             type="button"
             onClick={logout}
-            className="px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-red-950/40 text-slate-400 hover:text-red-300 border border-slate-800 hover:border-red-800/60 text-xs font-mono flex items-center gap-1.5 transition-colors cursor-pointer"
-            title="Sign out of engineering console and return to OTP authentication"
+            className="px-3.5 py-2 rounded-xl bg-slate-900/90 hover:bg-rose-950/40 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-800/60 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+            title="Sign out of your session"
           >
             <LogOut className="w-3.5 h-3.5" />
             <span>Sign Out</span>
@@ -145,20 +173,8 @@ export const AdminPortal: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
+      {/* Clear Navigation Tabs in Plain English */}
       <div className="px-6 sm:px-8 border-b border-slate-800 bg-[#080d17] flex items-center gap-2 overflow-x-auto">
-        <button
-          onClick={() => setActiveTab('telemetry')}
-          className={`py-3.5 px-4 text-xs font-semibold flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap cursor-pointer ${
-            activeTab === 'telemetry'
-              ? 'text-cyan-400 border-cyan-400 bg-cyan-950/20'
-              : 'text-slate-400 border-transparent hover:text-slate-200'
-          }`}
-        >
-          <Activity className="w-4 h-4" />
-          <span>Infrastructure & Telemetry</span>
-        </button>
-
         <button
           onClick={() => setActiveTab('projects')}
           className={`py-3.5 px-4 text-xs font-semibold flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap cursor-pointer ${
@@ -168,8 +184,22 @@ export const AdminPortal: React.FC = () => {
           }`}
         >
           <Layers className="w-4 h-4" />
-          <span>Client Projects Matrix</span>
-          <span className="px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 text-[10px]">{projects.length}</span>
+          <span>Client Projects</span>
+          <span className="px-2 py-0.5 rounded-full bg-slate-800 text-slate-200 text-[11px] font-bold">
+            {projects.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('telemetry')}
+          className={`py-3.5 px-4 text-xs font-semibold flex items-center gap-2 border-b-2 transition-colors whitespace-nowrap cursor-pointer ${
+            activeTab === 'telemetry'
+              ? 'text-cyan-400 border-cyan-400 bg-cyan-950/20'
+              : 'text-slate-400 border-transparent hover:text-slate-200'
+          }`}
+        >
+          <Activity className="w-4 h-4" />
+          <span>System Health & Speed</span>
         </button>
 
         <button
@@ -180,9 +210,11 @@ export const AdminPortal: React.FC = () => {
               : 'text-slate-400 border-transparent hover:text-slate-200'
           }`}
         >
-          <GitPullRequest className="w-4 h-4" />
-          <span>Engineering Triage</span>
-          <span className="px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 text-[10px]">{tickets.filter(t => t.status !== 'Resolved').length} Active</span>
+          <HelpCircle className="w-4 h-4" />
+          <span>Customer Support Requests</span>
+          <span className="px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800/60 text-[11px] font-bold">
+            {tickets.filter(t => t.status !== 'Resolved').length} Open
+          </span>
         </button>
 
         <button
@@ -194,121 +226,214 @@ export const AdminPortal: React.FC = () => {
           }`}
         >
           <Lock className="w-4 h-4" />
-          <span>Audit Stream & Security</span>
+          <span>Security & Activity Log</span>
         </button>
       </div>
 
-      {/* Tab 1: Telemetry */}
-      {activeTab === 'telemetry' && (
-        <div className="p-6 sm:p-8 space-y-6">
-          {/* Telemetry Stat Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800/80">
-              <span className="text-xs font-mono text-slate-400 block mb-1">AGGREGATE THROUGHPUT</span>
-              <div className="text-2xl font-extrabold font-mono text-white mb-1">{telemetry.totalRequestsPerMin}</div>
-              <span className="text-xs text-emerald-400 flex items-center gap-1 font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                Nominal Traffic Curve
-              </span>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800/80">
-              <span className="text-xs font-mono text-slate-400 block mb-1">AVERAGE P95 LATENCY</span>
-              <div className="text-2xl font-extrabold font-mono text-cyan-400 mb-1">{telemetry.averageLatencyMs} ms</div>
-              <span className="text-xs text-slate-400 font-mono">Target &lt; 50ms (Exceeded)</span>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800/80">
-              <span className="text-xs font-mono text-slate-400 block mb-1">ERROR RATE (4XX/5XX)</span>
-              <div className="text-2xl font-extrabold font-mono text-emerald-400 mb-1">{telemetry.errorRatePercent}%</div>
-              <span className="text-xs text-emerald-400 font-mono">SLA: 99.988% Up</span>
-            </div>
-
-            <div className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800/80">
-              <span className="text-xs font-mono text-slate-400 block mb-1">ACTIVE CLUSTERS</span>
-              <div className="text-2xl font-extrabold font-mono text-indigo-400 mb-1">{telemetry.activeContainers} Nodes</div>
-              <span className="text-xs text-slate-400 font-mono">{telemetry.databaseConnections} Pool Connections</span>
-            </div>
-          </div>
-
-          {/* Quick Command Terminal Simulation */}
-          <div className="p-5 rounded-2xl bg-black/60 border border-slate-800 font-mono text-xs text-slate-300">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3 text-slate-400">
-              <span className="flex items-center gap-2">
-                <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-                <span>NEXGRID DEPLOYMENT & TELEMETRY STREAM</span>
-              </span>
-              <span className="text-emerald-400">LIVE SYNC</span>
-            </div>
-
-            <div className="space-y-1 text-slate-300">
-              <p><span className="text-cyan-400">[08:12:04 UTC]</span> gVisor container sandbox: Apex Logistics OS (v2.4.0-rc1) running on port 3000</p>
-              <p><span className="text-cyan-400">[08:12:15 UTC]</span> Postgres pg_stat_statements: 0 slow queries (&gt;100ms) recorded across 18 schemas</p>
-              <p><span className="text-cyan-400">[08:12:44 UTC]</span> Redis Pub/Sub: 142 GPS driver packets processed / sec (0 dropped)</p>
-              <p><span className="text-emerald-400">[08:13:00 UTC]</span> Security Heartbeat: all mTLS certificates valid until 2027</p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Tab 2: Projects Matrix */}
+      {/* TAB 1: CLIENT PROJECTS (Primary view) */}
       {activeTab === 'projects' && (
         <div className="p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between">
+          {/* Quick Summary Bar */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-[#0d1424] p-4 rounded-2xl border border-slate-800">
             <div>
-              <h3 className="text-lg font-bold text-white">Multi-Tenant Client Deployments</h3>
-              <p className="text-xs text-slate-400">Direct pipeline controls to build, test, and promote client software.</p>
+              <div className="text-xs text-slate-400">Total Client Projects</div>
+              <div className="text-xl font-bold text-white mt-0.5">3 Active</div>
+            </div>
+            <div>
+              <div className="text-xs text-slate-400">Live in Production</div>
+              <div className="text-xl font-bold text-emerald-400 mt-0.5">1 Live (Lumina)</div>
+            </div>
+            <div>
+              <div className="text-xs text-slate-400">In Testing & Review</div>
+              <div className="text-xl font-bold text-cyan-400 mt-0.5">2 On Schedule</div>
+            </div>
+            <div>
+              <div className="text-xs text-slate-400">Next Target Delivery</div>
+              <div className="text-xl font-bold text-amber-300 mt-0.5">Oct 04, 2026</div>
             </div>
           </div>
 
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 className="text-lg font-bold text-white">Active Client Projects</h3>
+              <p className="text-xs text-slate-400">
+                Review progress for each client, delivery timelines, and publish live software updates with one click.
+              </p>
+            </div>
+          </div>
+
+          {/* Clean Project Cards */}
           <div className="space-y-4">
-            {projects.map((proj) => (
-              <div 
-                key={proj.id}
-                className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800 flex flex-col lg:flex-row lg:items-center justify-between gap-5"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono font-bold text-white bg-slate-800 px-2 py-0.5 rounded">
-                      {proj.client}
-                    </span>
-                    <span className="text-xs text-slate-500">•</span>
-                    <span className="text-xs font-mono text-cyan-400">{proj.branch}</span>
-                    <span className="text-xs text-slate-500">•</span>
-                    <span className="text-xs font-mono text-indigo-400">{proj.slaTier}</span>
+            {projects.map((proj) => {
+              const info = projectDescriptions[proj.id] || {
+                purpose: 'Custom digital system solution engineered for the client.',
+                phase: 'In Progress'
+              };
+
+              const isLive = proj.status.toLowerCase().includes('live');
+              const isStaging = proj.status.toLowerCase().includes('staging');
+
+              return (
+                <div 
+                  key={proj.id}
+                  className="p-5 sm:p-6 rounded-2xl bg-[#0d1424] border border-slate-800 hover:border-slate-700 transition-colors flex flex-col lg:flex-row lg:items-center justify-between gap-5"
+                >
+                  <div className="space-y-2 max-w-2xl">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-xs font-bold text-white bg-slate-800 px-2.5 py-1 rounded-lg border border-slate-700">
+                        {proj.client}
+                      </span>
+                      <span className="text-xs text-slate-500">•</span>
+                      <span className="text-xs font-medium text-slate-300 flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-cyan-400" />
+                        <span>Delivery: <strong>{proj.nextDelivery}</strong></span>
+                      </span>
+                      <span className="text-xs text-slate-500">•</span>
+                      <span className="text-xs font-medium text-slate-300">
+                        Plan: {proj.slaTier}
+                      </span>
+                    </div>
+
+                    <div>
+                      <h4 className="text-lg font-bold text-white">{proj.name}</h4>
+                      <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                        {info.purpose}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-xs text-slate-400 pt-1">
+                      <span className="text-slate-500">Current Phase:</span>
+                      <span className="text-cyan-300 font-medium">{info.phase}</span>
+                    </div>
                   </div>
 
-                  <h4 className="text-base font-bold text-white">{proj.name}</h4>
-                  <p className="text-xs text-slate-400 font-mono">Stack: {proj.tech} • Delivery: {proj.nextDelivery}</p>
-                </div>
+                  {/* Status & Actions */}
+                  <div className="flex flex-wrap items-center gap-3 pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-800">
+                    <div className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 border ${
+                      isLive 
+                        ? 'bg-emerald-950/60 border-emerald-700 text-emerald-300'
+                        : isStaging
+                        ? 'bg-cyan-950/60 border-cyan-700 text-cyan-300'
+                        : 'bg-amber-950/60 border-amber-700 text-amber-300'
+                    }`}>
+                      <span className={`w-2 h-2 rounded-full ${isLive ? 'bg-emerald-400 animate-pulse' : 'bg-cyan-400'}`}></span>
+                      <span>{isLive ? 'Live & Running' : isStaging ? 'In Testing (Staging Demo)' : 'In Active Development'}</span>
+                    </div>
 
-                <div className="flex flex-wrap items-center gap-3">
-                  <span className="px-3 py-1 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">
-                    {proj.status}
-                  </span>
-
-                  <button
-                    disabled={isDeploying}
-                    onClick={() => handleSimulateDeploy(proj.name)}
-                    className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-50 text-slate-950 font-bold text-xs flex items-center gap-2 transition-colors cursor-pointer"
-                  >
-                    <Play className="w-3.5 h-3.5 fill-current" />
-                    <span>{isDeploying ? 'Deploying...' : 'Promote Build'}</span>
-                  </button>
+                    <button
+                      disabled={isDeploying === proj.name}
+                      onClick={() => handleSimulateDeploy(proj.name)}
+                      className="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 disabled:opacity-60 text-slate-950 font-bold text-xs flex items-center gap-2 transition-colors cursor-pointer shadow-lg shadow-cyan-500/10"
+                      title="Publish latest updates to make them live for the client"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-current" />
+                      <span>{isDeploying === proj.name ? 'Publishing Updates...' : 'Publish Update'}</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Tab 3: Tickets Triage */}
+      {/* TAB 2: SYSTEM HEALTH & SPEED (Plain English Metrics) */}
+      {activeTab === 'telemetry' && (
+        <div className="p-6 sm:p-8 space-y-6">
+          <div>
+            <h3 className="text-lg font-bold text-white">System Health & Performance</h3>
+            <p className="text-xs text-slate-400">
+              Clear, real-time indicators showing how fast your websites are loading and server reliability.
+            </p>
+          </div>
+
+          {/* Simple 4 Metric Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800">
+              <span className="text-xs font-semibold text-slate-400 block mb-1">VISITOR ACTIVITY</span>
+              <div className="text-2xl font-black text-white mb-1">{telemetry.totalRequestsPerMin}</div>
+              <span className="text-xs text-emerald-400 flex items-center gap-1 font-medium">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                Normal traffic flowing smoothly
+              </span>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800">
+              <span className="text-xs font-semibold text-slate-400 block mb-1">PAGE LOADING SPEED</span>
+              <div className="text-2xl font-black text-cyan-400 mb-1">{telemetry.averageLatencyMs} ms</div>
+              <span className="text-xs text-slate-300 font-medium">
+                Super fast (Under 50ms standard)
+              </span>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800">
+              <span className="text-xs font-semibold text-slate-400 block mb-1">SYSTEM UPTIME</span>
+              <div className="text-2xl font-black text-emerald-400 mb-1">99.99%</div>
+              <span className="text-xs text-emerald-400 font-medium">
+                Zero crashes or service outages
+              </span>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800">
+              <span className="text-xs font-semibold text-slate-400 block mb-1">CLOUD SERVERS</span>
+              <div className="text-2xl font-black text-indigo-300 mb-1">{telemetry.activeContainers} Servers</div>
+              <span className="text-xs text-slate-300 font-medium">
+                100% online across all regions
+              </span>
+            </div>
+          </div>
+
+          {/* Human-Friendly Live Activity Feed (replacing raw terminal code) */}
+          <div className="p-6 rounded-2xl bg-[#0d1424] border border-slate-800 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-slate-300">
+              <span className="flex items-center gap-2 font-semibold text-white text-sm">
+                <Activity className="w-4 h-4 text-cyan-400" />
+                <span>Live System Status Feed</span>
+              </span>
+              <span className="text-xs text-emerald-400 font-medium flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Everything Operational
+              </span>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-white font-medium">Apex Logistics Platform is active</div>
+                  <div className="text-slate-400 text-[11px] mt-0.5">All driver GPS tracking feeds and dispatch tables are loading without delay.</div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-white font-medium">Databases running at optimal speed</div>
+                  <div className="text-slate-400 text-[11px] mt-0.5">Customer records, user logins, and order data responding in under 38 milliseconds.</div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-slate-900/60 border border-slate-800">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <div>
+                  <div className="text-white font-medium">Security and SSL certificates verified</div>
+                  <div className="text-slate-400 text-[11px] mt-0.5">All customer connections encrypted and secure with 24/7 automated monitoring.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* TAB 3: CUSTOMER SUPPORT REQUESTS */}
       {activeTab === 'tickets' && (
         <div className="p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
-              <h3 className="text-lg font-bold text-white">Client Issue Triage & Engineering Queue</h3>
-              <p className="text-xs text-slate-400">Strict SLA countdown monitoring and assignment.</p>
+              <h3 className="text-lg font-bold text-white">Customer Support Requests</h3>
+              <p className="text-xs text-slate-400">
+                Review questions or requests submitted by your clients and track when they are completed.
+              </p>
             </div>
           </div>
 
@@ -316,30 +441,41 @@ export const AdminPortal: React.FC = () => {
             {tickets.map((tck) => (
               <div 
                 key={tck.id}
-                className="p-5 rounded-xl bg-[#0d1424] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="p-5 rounded-2xl bg-[#0d1424] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-xs font-bold text-cyan-400">{tck.id}</span>
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-xs font-bold text-white bg-slate-800 px-2 py-0.5 rounded">
+                      {tck.id}
+                    </span>
                     <span className="text-slate-600">•</span>
-                    <span className="text-xs font-mono text-amber-400">{tck.priority}</span>
+                    <span className="text-xs font-semibold text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800/40">
+                      {tck.priority}
+                    </span>
                     <span className="text-slate-600">•</span>
-                    <span className="text-xs text-slate-400">Author: {tck.author}</span>
+                    <span className="text-xs text-slate-300">
+                      Client: <strong>{tck.author}</strong>
+                    </span>
                   </div>
-                  <h4 className="text-sm font-bold text-white">{tck.title}</h4>
-                  <p className="text-xs text-slate-400 font-mono">Assigned Staff: {tck.assignedEngineer}</p>
+
+                  <h4 className="text-base font-bold text-white">{tck.title}</h4>
+                  
+                  <div className="text-xs text-slate-400 flex items-center gap-2">
+                    <span>Lead Assigned:</span>
+                    <span className="text-cyan-300 font-medium">{tck.assignedEngineer}</span>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-3 self-end sm:self-center">
                   <button
                     onClick={() => handleToggleTicketStatus(tck.id)}
-                    className={`px-3.5 py-1.5 rounded-lg text-xs font-mono font-semibold transition-colors cursor-pointer ${
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${
                       tck.status === 'Resolved'
-                        ? 'bg-emerald-950 text-emerald-400 border border-emerald-800'
-                        : 'bg-amber-950 text-amber-400 border border-amber-800 hover:bg-amber-900'
+                        ? 'bg-emerald-950/80 text-emerald-300 border border-emerald-700 hover:bg-emerald-900'
+                        : 'bg-cyan-500 text-slate-950 font-bold hover:bg-cyan-400 shadow-md shadow-cyan-500/10'
                     }`}
                   >
-                    {tck.status === 'Resolved' ? 'Status: RESOLVED (Click to Re-open)' : 'Click to Mark RESOLVED'}
+                    {tck.status === 'Resolved' ? '✓ Resolved (Click to Re-open)' : 'Mark as Completed ✓'}
                   </button>
                 </div>
               </div>
@@ -348,36 +484,36 @@ export const AdminPortal: React.FC = () => {
         </div>
       )}
 
-      {/* Tab 4: Security & Audit Stream */}
+      {/* TAB 4: SECURITY & ACTIVITY LOG */}
       {activeTab === 'security' && (
         <div className="p-6 sm:p-8 space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-lg font-bold text-white">Immutable Security Audit Trail</h3>
-              <p className="text-xs text-slate-400">Real-time recording of zero-trust handshakes and authorization events.</p>
-            </div>
+          <div>
+            <h3 className="text-lg font-bold text-white">Security & Login Activity</h3>
+            <p className="text-xs text-slate-400">
+              A transparent chronological record of logins and system updates for your peace of mind.
+            </p>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
-              <thead className="bg-slate-900/80 text-slate-400 uppercase border-b border-slate-800">
+          <div className="overflow-x-auto rounded-2xl border border-slate-800 bg-[#0d1424]">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-900/90 text-slate-300 uppercase font-semibold border-b border-slate-800">
                 <tr>
-                  <th className="py-3 px-4">Event Type</th>
-                  <th className="py-3 px-4">Target Resource</th>
-                  <th className="py-3 px-4">Source / Actor</th>
-                  <th className="py-3 px-4">Timestamp</th>
-                  <th className="py-3 px-4 text-right">Verification</th>
+                  <th className="py-3.5 px-4">Action / Event</th>
+                  <th className="py-3.5 px-4">System Affected</th>
+                  <th className="py-3.5 px-4">User / Actor</th>
+                  <th className="py-3.5 px-4">When</th>
+                  <th className="py-3.5 px-4 text-right">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-slate-800/60 font-sans">
                 {MOCK_SECURITY_AUDIT_LOGS.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-900/40 transition-colors">
+                  <tr key={log.id} className="hover:bg-slate-900/50 transition-colors">
                     <td className="py-3.5 px-4 text-white font-medium">{log.event}</td>
-                    <td className="py-3.5 px-4 text-cyan-400">{log.target}</td>
-                    <td className="py-3.5 px-4 text-slate-400">{log.sourceIp}</td>
-                    <td className="py-3.5 px-4 text-slate-500">{log.time}</td>
+                    <td className="py-3.5 px-4 text-cyan-300 font-mono text-[11px]">{log.target}</td>
+                    <td className="py-3.5 px-4 text-slate-300">{log.sourceIp}</td>
+                    <td className="py-3.5 px-4 text-slate-400">{log.time}</td>
                     <td className="py-3.5 px-4 text-right">
-                      <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800/40 text-[10px]">
+                      <span className="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800/60 text-[10px] font-bold">
                         {log.status}
                       </span>
                     </td>

@@ -100,7 +100,9 @@ export const Navbar: React.FC = () => {
                 <>
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                   <span className="truncate max-w-[85px]">{currentUser.name.split(' ')[0]}</span>
-                  <span className="text-[10px] text-cyan-400">({currentUser.role === 'customer' ? 'Client' : 'Staff'})</span>
+                  <span className="text-[10px] text-cyan-400">
+                    ({currentUser.title?.toLowerCase().includes('owner') ? 'Owner' : currentUser.role === 'customer' ? 'Client' : 'Staff'})
+                  </span>
                 </>
               ) : (
                 <>

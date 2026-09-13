@@ -37,18 +37,18 @@ export const StaffPortalPage: React.FC = () => {
             </Link>
             <span>/</span>
             <span className="text-cyan-400 font-semibold flex items-center gap-1.5">
-              <Terminal className="w-3.5 h-3.5" />
-              <span>Engineering & Operations Console</span>
+              <ShieldCheck className="w-3.5 h-3.5" />
+              <span>Owner & Admin Dashboard</span>
             </span>
           </div>
 
           <div className="flex items-center gap-3">
             {isStaffAuthed ? (
               <div className="flex items-center gap-3">
-                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono">
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-sans">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                   <span className="text-white font-semibold">{currentUser?.name}</span>
-                  <span className="text-cyan-400">• {currentUser?.clearanceLevel}</span>
+                  <span className="text-cyan-400 font-medium">• Owner & Super Admin</span>
                 </div>
 
                 <Link
